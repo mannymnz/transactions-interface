@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from "react";
 import Papa from 'papaparse';
+import Summary from "../../components/summary";
 
 const AWS_BUCKET_URL = "https://plaid-transactions-history.s3.us-west-1.amazonaws.com"
 const TRANS_IMG_ALT_URL = "https://plaid-transactions-history.s3.us-west-1.amazonaws.com/images/creeper.png"
@@ -224,21 +225,15 @@ export default function Home() {
         
         {/* Transactions Summary Data */}
         <div
-          style={{
-            backgroundColor: "#004BA8",
-            padding: "30px",
-            color: "white",
-            height: "60px",
-            borderRadius: "10px",
-            fontSize: "30px",
-            margin: "10px"
-          }}
+          style={{ margin: "5px"}}
         >
-          <div>Weekly Total:</div>
-          <div>${transactions_total}</div>
+          <Summary transactions={transactions} currWeek={currWeek} />
         </div>
 
       </div>
     </div>
   );
 }
+
+
+export { daysDelta }
