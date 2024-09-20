@@ -1,12 +1,9 @@
 "use client"
-import Image from "next/image";
-import styles from "./page.module.css";
-import AWS from 'aws-sdk';
 import { useEffect, useState } from "react";
 import Papa from 'papaparse';
-import { Box } from "@chakra-ui/react";
 
 const AWS_BUCKET_URL = "https://plaid-transactions-history.s3.us-west-1.amazonaws.com"
+const TRANS_IMG_ALT_URL = "https://plaid-transactions-history.s3.us-west-1.amazonaws.com/images/creeper.png"
 
 const dateToStr = (date) => {
   /* Takes in a Date object and returns a string of the form
@@ -22,7 +19,7 @@ const dateToStr = (date) => {
 const daysDelta = (dateStr, delta) => {
   /* increments the week by delta * weeks */
   const date = new Date(dateStr)
-  date.setDate(date.getDate() - date.getDay() + delta)
+  date.setDate(date.getDate() + delta)
   return dateToStr(date)
 }
 
@@ -48,7 +45,11 @@ const fetchTransactionsWeek = async (dateStr) => {
   console.log("fetching transactions for week: ", dateStr)
   try {
     // Fetch the CSV file
-    const response = await fetch(csvUrl);
+    const response = await fetch(csvUrl, {
+      headers: {
+        'Cache-Control': 'no-cache'
+      }
+    });
     const csvText = await response.text();
 
     if (!response.ok) {
@@ -83,6 +84,7 @@ export default function Home() {
     fetchTransactionsWeek(currWeek)
     .then((data) => setTransactions(data))
   }, [currWeek])
+  
   return (
     <div style={{
       textAlign: "center",
@@ -210,7 +212,7 @@ export default function Home() {
                         top: "10px",
                         right: "10px",
                       }}>
-                        <img src={trans.logo_url} height="50px" width="50px"/>
+                        <img src={trans.logo_url || TRANS_IMG_ALT_URL} height="50px" width="50px"/>
                       </div>
                     </div>
                   </div>
