@@ -1,6 +1,22 @@
-import { daysDelta } from "../src/app/page"
-
 const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"]
+
+const dateToStr = (date) => {
+    /* Takes in a Date object and returns a string of the form
+        YYYY/MM/DD
+    */
+    const Y = date.getFullYear()
+    const MM = String(date.getMonth() + 1).padStart(2, '0')
+    const DD = String(date.getDate()).padStart(2, '0')
+    
+    return `${Y}/${MM}/${DD}`
+  }
+  
+  const daysDelta = (dateStr, delta) => {
+    /* increments the week by delta * weeks */
+    const date = new Date(dateStr)
+    date.setDate(date.getDate() + delta)
+    return dateToStr(date)
+  }
 
 export default function Summary({ transactions, currWeek }) {
     let total = transactions.reduce(
